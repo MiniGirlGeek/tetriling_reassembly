@@ -33,7 +33,7 @@ perfect_solution = [
 # NOTE: This example is used for the mock solution from 'main.py' only.
 
 # Uncomment the following line to generate a random target shape
-target, limit_tetris, perfect_solution = utils.generate_target(width=1000, height=1000, density=0.8)  # NOTE: it is recommended to keep density below 0.8
+target, limit_tetris, perfect_solution = utils.generate_target(width=140, height=1000, density=0.8)  # NOTE: it is recommended to keep density below 0.8
 
 solution = Tetris(deepcopy(target),deepcopy(limit_tetris))
 
@@ -87,5 +87,5 @@ else:  # if the solution is valid, test time performance and accuracy
         # NOTE: for large sizes (e.g., 100x100), visualisation will take several seconds and might not be that helpful.
         # Feel free to comment out the following lines if you don't need the visual feedback.
 
-        print("Displaying solution...")
+        #print("Displaying solution...")
         #utils.visual_perfect(perfect_solution, solution)
