@@ -33,7 +33,7 @@ perfect_solution = [
 # NOTE: This example is used for the mock solution from 'main.py' only.
 
 # Uncomment the following line to generate a random target shape
-target, limit_tetris, perfect_solution = utils.generate_target(width=140, height=1000, density=0.8)  # NOTE: it is recommended to keep density below 0.8
+target, limit_tetris, perfect_solution = utils.generate_target(width=1000, height=1000, density=0.8)  # NOTE: it is recommended to keep density below 0.8
 
 solution = Tetris(deepcopy(target),deepcopy(limit_tetris))
 
@@ -80,8 +80,10 @@ else:  # if the solution is valid, test time performance and accuracy
 
         print("The number of blocks in the TARGET is {:.0f}.".format(total_blocks))
         print("The number of blocks in the SOLUTION is {:.0f}.".format(total_blocks_solution))
-        print("There are {} MISSING blocks ({:.4f}%) and {} EXCESS blocks ({:.4f}%).\n".format
+        print("There are {} MISSING blocks ({:.4f}%) and {} EXCESS blocks ({:.4f}%).".format
               (missing, 100 * missing / total_blocks, excess, 100 * excess / total_blocks))
+        print("Your accuracy is {:.4f}%.\n".format
+              (100-((100 * missing + 100 * excess) / total_blocks)))
 
         # VISUALISATION
         # NOTE: for large sizes (e.g., 100x100), visualisation will take several seconds and might not be that helpful.

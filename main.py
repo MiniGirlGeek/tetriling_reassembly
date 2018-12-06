@@ -93,8 +93,10 @@ def place(shapeID, x, y, solution_matrix, pieceID, tetronimos, target, limit_tet
 
 
 def Tetris(target, limit_tetris):
-	#tetris_priority = [set(range(3, 16)), {2, 3, 16, 17, 18, 19}, {1}]
 	tetronimos = [0] + [utils.generate_shape(x) for x in range(1, 20)]
+
+	width = len(target[0]) # The width of the target matrix
+	height = len(target) 
 
 	solution_matrix = deepcopy(target)
 	total_shapes = 0
@@ -107,6 +109,7 @@ def Tetris(target, limit_tetris):
 				solution_matrix[y][x] = (0, 0)
 	pieceID = 1
 
+
 	for y in range(len(target)):
 		for x in range(len(target[y])):
 			if target[y][x]:
@@ -114,26 +117,50 @@ def Tetris(target, limit_tetris):
 				best_shape = 0
 				coord_scores = calc_coord_scores(target, x, y)
 				if coord_scores != {}:
+					results = []
 					for shapeID in limit_tetris:
 						if limit_tetris[shapeID] > 0:
 							if total_shapes > 2500:
 								weighting = (limit_tetris[shapeID] / total_shapes)
 							else:
 								weighting = 1
-							score = weighting * score_fit(shapeID, tetronimos, coord_scores)
-							if score > biggest_score:
-								biggest_score = score
+							weighting = (limit_tetris[shapeID] / total_shapes)
+							shape_score = weighting * score_fit(shapeID, tetronimos, coord_scores)
+							if shape_score > biggest_score:
+								biggest_score = shape_score
 								best_shape = shapeID
-							#results.append((shapeID, score_fit(shapeID, tetronimos, coord_scores)))
-					#results.sort(key=score)
 					if biggest_score > 0:
 						pieceID = place(best_shape, x, y, solution_matrix, pieceID, tetronimos, target, limit_tetris)
 						total_shapes -= 1
 					else:
-
 						solution_matrix[y][x] = (0, 0)
 				else:
 					solution_matrix[y][x] = (0, 0)
 
+	#places an block
+	for y in range(len(target)):
+		for x in range(len(target[y])):
+			if target[y][x]:
+				for shapeID in limit_tetris:
+					if limit_tetris[shapeID] > 0:
+						covering = 0
+						for coord_mod in tetronimos[shapeID]:
+							new_y = y + coord_mod[0]
+							new_x = x + coord_mod[1]
+							if new_y >= 0 and new_x >= 0 and new_y < height and new_x < width:
+								if target[new_y][new_x] and solution_matrix[new_y][new_x] == (0, 0):
+									covering += 1
+								if solution_matrix[new_y][new_x] != (0, 0):
+									covering = 0
+									break
+							else:
+								covering = 0
+								break
+						if covering >= 3:
+							pieceID = place(shapeID, x, y, solution_matrix, pieceID, tetronimos, target, limit_tetris)
+							break
+
+
+	#print('\n'.join([' '.join([str(char) for char in row]) for row in solution_matrix]))
 	return solution_matrix
 
